@@ -1,0 +1,30 @@
+name: Build Android
+
+on:
+  push:
+    branches:
+      - main
+      - Android
+
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+    env:
+      project: Minimal
+    
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
+
+    - name: Build Android lib
+      uses: NewChromantics/PopAction_BuildAndroid@v2
+      with:
+        buildtargetname: "Minimal"
+        buildpath: "Minimal.Android/"
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{ env.UPLOAD_NAME }}
+        path: ${{ env.UPLOAD_DIR }}

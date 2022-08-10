@@ -1,0 +1,51 @@
+# gr: this is based on PopH264's build workflow
+name: Build Minimal.dll
+
+env:
+  project: Minimal
+
+on:
+  push:
+    branches:
+      - main
+  watch:
+    types: [started]
+
+jobs:
+  Build:
+    name: ${{ matrix.config.os }}-${{ matrix.config.type }}
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      matrix:
+        config:
+          - os: windows-latest
+            platform: x64
+            configuration: Dll
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+        with:
+          submodules: "recursive"
+          token: ${{ secrets.GRAHAM_PAT_PRIVATE_REPOSITORY_ACCESS }}
+
+      - name: Configure Windows
+        if: matrix.config.os == 'windows-latest'
+        uses: microsoft/setup-msbuild@v1.0.2
+
+      - name: Windows
+        id: Windows
+        if: matrix.config.os == 'windows-latest'
+        uses: NewChromantics/PopAction_BuildWindows@v1.1.1
+        with:
+          BuildPlatform: ${{matrix.config.platform}}
+          BuildConfiguration: ${{matrix.config.configuration}}
+          BuildSolution: Minimal.visualstudio\Minimal.sln
+          OutputDirectory: "${{github.workspace}}/Build_${{matrix.config.platform}}_${{matrix.config.configuration}}/"
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          # these env vars are set in the PopAction_BuildXXX actions
+          name: ${{ env.UPLOAD_NAME }}
+          path: ${{ env.UPLOAD_DIR }}

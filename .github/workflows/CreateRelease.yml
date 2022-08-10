@@ -1,0 +1,127 @@
+# gr: this is based on PopH264's build workflow
+name: Create Release
+
+env:
+  project: Minimal
+  # where in working directory do we copy artifacts into and copy to release contents/repository
+  PackageDirectory: MinimalPackage/
+
+on:
+  push:
+    tags:
+      - v*
+  watch:
+    types: [started]
+
+jobs:
+  Build:
+    name: ${{ matrix.config.os }}-${{ matrix.config.type }}
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      matrix:
+        config:
+          # windows dll
+          - os: windows-latest
+            platform: x64
+            configuration: Dll
+          
+          # ios framework
+          - os: macos-12
+            scheme: Minimal_Ios
+
+          # macos dylib
+          - os: macos-12
+            scheme: Minimal_Dylib
+            
+          # android shared libs
+          - os: ubuntu-latest
+            target: android
+            
+
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+          token: ${{ secrets.GRAHAM_PAT_PRIVATE_REPOSITORY_ACCESS }}
+
+      - name: Configure Windows
+        if: matrix.config.os == 'windows-latest'
+        uses: microsoft/setup-msbuild@v1.0.2
+
+      - name: Windows
+        id: Windows
+        if: matrix.config.os == 'windows-latest'
+        uses: NewChromantics/PopAction_BuildWindows@v1.1.1
+        with:
+          BuildPlatform: ${{matrix.config.platform}}
+          BuildConfiguration: ${{matrix.config.configuration}}
+          BuildSolution: Minimal.visualstudio\Minimal.sln
+          OutputDirectory: "${{github.workspace}}/Build_${{matrix.config.platform}}_${{matrix.config.configuration}}/"
+
+      # todo: get condense Apple certificates and correct product name
+      #- name: "Import Apple-Distriubution NewChromantics Signing Certificate"
+      #  if: matrix.config.os == 'macos-latest'
+      #  uses: devbotsxyz/xcode-import-certificate@master
+      #  with:
+      #    certificate-data: ${{ secrets.APPLE_DIST_NEWCHROMANTICS_P12 }}
+      #    certificate-passphrase: ${{ secrets.APPLE_DIST_NEWCHROMANTICS_PASSWORD }}
+      #    keychain-password: "Hello"
+
+      - name: Apple ${{matrix.config.scheme}}
+        id: Apple
+        if: matrix.config.scheme != ''
+        uses: NewChromantics/PopAction_BuildApple@v1.0.11
+        with:
+          BuildScheme: ${{matrix.config.scheme}}
+          project: ${{ env.project }}
+
+      - name: Build Android lib
+        if: matrix.config.target == 'android'
+        uses: NewChromantics/PopAction_BuildAndroid@v2
+        with:
+          buildtargetname: "Minimal"
+          buildpath: "Minimal.Android/"
+
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          # these env vars are set in each of the actions
+          name: ${{ env.UPLOAD_NAME }}
+          path: ${{ env.UPLOAD_DIR }}
+
+  publish-gpr:
+    needs: Build
+    runs-on: ubuntu-latest
+    steps:
+      # Download all build artifacts into Packaging dir
+      #- uses: actions/checkout@v2
+      - name: Download build artifacts
+        uses: actions/download-artifact@v2
+        with:
+          path: ${{ env.PackageDirectory }}/Runtime/
+
+      #- name: Upload artifacts
+      #  uses: actions/upload-artifact@v2
+      #  with:
+      #    name: ${{ env.UPLOAD_NAME }}
+      #    path: ${{ env.UPLOAD_DIR }}
+
+      # copy files we want in the release/package into the package dir
+      #- name: Copy files for packaging
+      #  run: |
+      #   echo Copying files into $PackageDirectory
+      #   #rsync -avP --exclude PopH264.xcframework/* Unity/PopH264/Assets/PopH264/ $PackageDirectory
+
+
+        # make a release
+      - name: Make github release
+        # only try and make a release if this is a release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: fnkr/github-action-ghr@v1   
+        env:
+         GHR_COMPRESS: zip
+         GHR_PATH: ${{ env.PackageDirectory }}
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

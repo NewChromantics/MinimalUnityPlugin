@@ -1,0 +1,34 @@
+# gr: this is based on PopH264's build workflow
+name: Build Macos Dylib
+
+env:
+  project: Minimal
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  Build:
+    name: Build
+    runs-on: macos-12
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: "recursive"
+          token: ${{ secrets.GRAHAM_PAT_PRIVATE_REPOSITORY_ACCESS }}
+
+      - name: Build Macos Static
+        uses: NewChromantics/PopAction_BuildApple@v1.0.11
+        with:
+          BuildScheme: ${{ env.project }}_Dylib
+          project: ${{ env.project }}
+
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          # Set in BuildXXX actions
+          name: ${{ env.UPLOAD_NAME }}
+          path: ${{ env.UPLOAD_DIR }}

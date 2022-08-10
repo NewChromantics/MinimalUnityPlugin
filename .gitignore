@@ -26,3 +26,7 @@ UnityTestProject/obj/
 # android build files & temp object files
 *.Android/libs/
 *.Android/obj/
+
+# unity android build files
+*.apk
+UnityTestProject/*_BackUpThisFolder_ButDontShipItWithYourGame/

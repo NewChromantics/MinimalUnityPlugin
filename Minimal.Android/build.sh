@@ -6,7 +6,7 @@
 #env
 
 # require param
-#BUILD_PROJECT_FOLDER=$TARGET_NAME.Android
+#BUILD_PROJECT_FOLDER=$PRODUCT_NAME.Android
 BUILD_PROJECT_FOLDER="$1"
 
 ACTION="$2"
@@ -25,8 +25,8 @@ if [ "$ACTION" == "" ]; then
 fi
 
 
-if [ "$TARGET_NAME" == "" ]; then
-	echo "Android/build.sh: TARGET_NAME not specified, expecting PopXyz (matching PopXyz.Android)"
+if [ "$PRODUCT_NAME" == "" ]; then
+	echo "Android/build.sh: PRODUCT_NAME not specified, expecting PopXyz (matching PopXyz.Android)"
 	exit 1;
 fi
 

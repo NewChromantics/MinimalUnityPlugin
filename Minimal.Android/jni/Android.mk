@@ -8,7 +8,7 @@ PROJECT_PATH := ../..
 #$(warning $(LOCAL_PATH))	#	debug
 
 # from env (so xcode variable or github var etc)
-APP_MODULE := $(TARGET_NAME)
+APP_MODULE := $(PRODUCT_NAME)
 
 
 include $(CLEAR_VARS)

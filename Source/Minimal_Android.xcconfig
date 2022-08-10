@@ -8,3 +8,5 @@ ANDROID_NDK_HOME=/opt/homebrew/share/android-ndk
 
 //	just build one abi
 //ANDROID_ABI_ONLY=armeabi-v7a
+
+PRODUCT_NAME=$(PROJECT_NAME)

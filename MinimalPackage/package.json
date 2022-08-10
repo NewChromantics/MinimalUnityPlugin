@@ -1,0 +1,13 @@
+{
+  "name": "minimal.unity.plugin",
+  "version": "0.0.1",
+  "displayName": "Minimal",
+  "description": "Minimal plugin for unity",
+  "unity": "2019.1",
+  "unityRelease": "0b5",
+  "author": {
+	"name": "New Chromantics",
+	"email": "hello@newchromantics.com",
+	"url": "https://www.newchromantics.com/"
+  }
+}

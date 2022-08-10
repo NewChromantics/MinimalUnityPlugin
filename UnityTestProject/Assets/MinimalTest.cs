@@ -20,6 +20,7 @@ public class MinimalTest : MonoBehaviour
             }
         catch(System.Exception e)
         {
+            Debug.LogException(e);
             VersionString = e.Message;
         }
     }

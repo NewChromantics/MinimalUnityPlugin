@@ -1,0 +1,28 @@
+
+# xcode user files
+xcuserdata/
+
+# emscripten build files
+*.Wasm/
+
+# visualstudio user/temp files
+.vs/
+*.user
+
+# visual studio build files
+*.visualstudio/x64/
+
+
+# unity temp files
+UnityTestProject/Library/
+UnityTestProject/Logs/
+UnityTestProject/Temp/
+UnityTestProject/UserSettings/
+UnityTestProject/*.csproj
+UnityTestProject/*.sln
+UnityTestProject/.idea/
+UnityTestProject/obj/
+
+# android build files & temp object files
+*.Android/libs/
+*.Android/obj/

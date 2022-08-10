@@ -1,0 +1,19 @@
+#include "./CRStreamer_Apple.xcconfig"
+
+IOS_DEPLOYMENT_TARGET = 13.0
+
+//	iphone ipad
+TARGETED_DEVICE_FAMILY = 1,2
+
+INFOPLIST_KEY_NSHumanReadableCopyright =
+
+//	from 2022/xcode 14, bitcode is required to be OFF
+ENABLE_BITCODE = NO
+
+LIBRARY_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/PrebuiltLibrarys/Draco_Ios
+
+//	stop wierd linker warnings
+//	https://stackoverflow.com/questions/8685045/xcode-with-boost-linkerid-warning-about-visibility-settings
+GCC_INLINES_ARE_PRIVATE_EXTERN = NO
+
+GCC_PREPROCESSOR_DEFINITIONS = $(GCC_PREPROCESSOR_DEFINITIONS) $(inherited) TARGET_IOS

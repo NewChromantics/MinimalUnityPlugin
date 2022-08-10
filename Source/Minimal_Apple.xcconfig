@@ -1,0 +1,36 @@
+#include "./Version.xcconfig"
+
+//	if this is included in a mac build, need to rename uuid/uuid.h as it gets included 
+//	instead of macos framework uuid.h
+EMSCRIPTEN_INCLUDE="/usr/local/Cellar/emscripten/2.0.10/libexec/system/include/"
+
+//	include google protobuf generated headers
+//	#include "cr/proto/models/manifest.pb.h"
+//PROTOBUFDECODERS_INCLUDE="Source/ProtobufDecoders"
+PROTOBUFDECODERS_INCLUDE="Source/NanopbDecoders"
+
+
+//	include google protobuf standard headers
+//	#include <google/protobuf/xxxx>
+//	https://github.com/protocolbuffers/protobuf.git
+//PROTOBUF_INCLUDE="Source/protobuf/src"
+PROTOBUF_INCLUDE="Source/nanopb"
+
+DRACO_INCLUDE="Source/Draco/src/"
+DRACODUMMY_INCLUDE="Source/DracoDummy"
+
+
+
+CLANG_CXX_LANGUAGE_STANDARD=c++17
+CLANG_CXX_LIBRARY = libc++
+GCC_C_LANGUAGE_STANDARD=c99
+
+HEADER_SEARCH_PATHS = $(HEADER_SEARCH_PATHS) $(inherited) $(EMSCRIPTEN_INCLUDE) $(PROTOBUF_INCLUDE) $(PROTOBUFDECODERS_INCLUDE) $(DRACO_INCLUDE) $(DRACODUMMY_INCLUDE)
+LIBRARY_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/PrebuiltLibrarys/PopH264
+
+DEBUG_INFORMATION_FORMAT = dwarf
+
+TARGET_ARCH[arch=x86_64] = TARGET_ARCH_X86_64
+TARGET_ARCH[arch=arm64] = TARGET_ARCH_ARM
+
+GCC_PREPROCESSOR_DEFINITIONS = $(TARGET_ARCH) DRACO_UNITY_PLUGIN DLL_EXPORT=extern\"C\" $(GCC_PREPROCESSOR_DEFINITIONS) $(inherited)

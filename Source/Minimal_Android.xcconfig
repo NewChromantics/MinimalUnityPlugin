@@ -1,0 +1,10 @@
+
+//	install android ndk on mac with homebrew
+//		brew install android-ndk
+//	it will report path of install; eg
+//		'export ANDROID_NDK_HOME="/opt/homebrew/share/android-ndk"'
+//ANDROID_NDK_HOME=/usr/local/share/android-ndk
+ANDROID_NDK_HOME=/opt/homebrew/share/android-ndk
+
+//	just build one abi
+//ANDROID_ABI_ONLY=armeabi-v7a

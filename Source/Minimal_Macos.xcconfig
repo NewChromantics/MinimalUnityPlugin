@@ -1,0 +1,13 @@
+#include "./CRStreamer_Apple.xcconfig"
+
+//	link to libcurl.tbd in frameworks to bind to the system dylib of libcurl
+OTHER_LDFLAGS = $(OTHER_LDFLAGS) -lcurl
+
+MACOSX_DEPLOYMENT_TARGET = 10.10
+
+//PRODUCT_NAME = $(TARGET_NAME)
+PRODUCT_NAME = CRStreamer
+
+GCC_PREPROCESSOR_DEFINITIONS = $(GCC_PREPROCESSOR_DEFINITIONS) $(inherited) TARGET_MACOS
+
+LIBRARY_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/PrebuiltLibrarys/Draco_Macos
